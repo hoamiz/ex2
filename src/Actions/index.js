@@ -6,18 +6,14 @@ export const Add = (tab) => ({
     type: 'ADD',
     tab
 })
-export const checkUpDown = () => ({
-    type: 'CHECK_UP_DOWN'
-})
+
 export const Up = () => ({
     type: 'UP'
 })
 export const Down = () => ({
     type: 'DOWN'
 })
-export const canEdit = () => ({
-    type: 'EDITABLE'
-})
+
 export const Delete = () => ({
     type: 'DELETE'
 })
@@ -38,3 +34,4 @@ export const onChange = (e) => ({
     type: 'CHANGE',
     e
 })
+

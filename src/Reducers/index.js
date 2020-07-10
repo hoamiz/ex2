@@ -1,9 +1,3 @@
-import { combineReducers } from 'redux';
-import * as action from '../Actions/index';
-import { connect } from 'react-redux';
-import { Active } from './../Actions/index';
-import { store } from './../index';
-
 
 const initialState = {
     chosenTab: "profile1",
@@ -12,112 +6,100 @@ const initialState = {
             name: 'Default',
             id: "profile1",
             className: "profile-item default no-edit",
+            active: false
         },
         {
             name: 'Game',
             id: "profile2",
-            className: "profile-item game no-edit"
+            className: "profile-item game no-edit",
+            active: false
+
         },
         {
             name: 'Movie',
             id: "profile3",
-            className: "profile-item movie no-edit"
+            className: "profile-item movie no-edit",
+            active: false
+
         },
         {
             name: 'Music',
             id: "profile4",
-            className: "profile-item music no-edit"
+            className: "profile-item music no-edit",
+            active: false
+
         },
         {
             name: 'Custom 1',
             id: "custom1",
             className: "profile-item custom",
+            active: false
+
         },
         {
             name: 'Demo Long Text Demo Long Text Demo',
             id: "custom2",
             className: "profile-item custom",
+            active: false
+
         },
     ],
     isEdit: false,
     innerText: '',
     onDelete: false,
-    clicked: false
 }
 export default function (state = initialState, action) {
     switch (action.type) {
         case 'ACTIVE': {
-            if (action.id !== undefined) state.chosenTab = action.id
-            document.getElementById(state.chosenTab).classList.add('active')
-            state.tabs.filter(tab => tab.id !== state.chosenTab).map(tab => {
-                document.getElementById(tab.id).classList.remove('active')
-            })
-            return state
+            let newState = Object.assign({}, state);
+            newState.tabs.find(tab => tab.id === action.id).active = true
+            newState.tabs.filter(tab => tab.id !== action.id).map(tab => tab.active = false)
+            newState.chosenTab = action.id
+            return newState
         }
         case 'ADD': {
-            let tabs = [...state.tabs, action.tab]
             return {
                 ...state,
-                tabs,
+                tabs: state.tabs.concat(action.tab),
             }
-        }
-        case 'CHECK_UP_DOWN': {
-            let index = state.tabs.findIndex(tab => tab.id === state.chosenTab)
-            if (index === 0) {
-                document.getElementById('profileUp').classList.add('disabled');
-                document.getElementById('profileDown').classList.remove('disabled');
-            } else if (index === state.tabs.length - 1) {
-                document.getElementById('profileUp').classList.remove('disabled');
-                document.getElementById('profileDown').classList.add('disabled');
-            }
-            else {
-                document.getElementById('profileUp').classList.remove('disabled');
-                document.getElementById('profileDown').classList.remove('disabled');
-            }
-            return state
         }
         case 'UP': {
-            let index = state.tabs.findIndex(tab => tab.id === state.chosenTab)
-            let tabs = [...state.tabs]
-            let tmpTab = tabs.filter(tab => tab.id === state.chosenTab)[0]
+            let newState = Object.assign({}, state)
+            let index = newState.tabs.findIndex(tab => tab.id === newState.chosenTab)
+            let tmpTab = newState.tabs.filter(tab => tab.id === newState.chosenTab)[0]
             if (index !== 0) {
-                tabs[index] = tabs[index - 1]
-                tabs[index - 1] = tmpTab
+                newState.tabs[index] = newState.tabs[index - 1]
+                newState.tabs[index - 1] = tmpTab
             }
-            return { ...state, tabs }
+            return newState
         }
         case 'DOWN': {
-            let index = state.tabs.findIndex(tab => tab.id === state.chosenTab)
-            let tabs = [...state.tabs]
-            let tmpTab = tabs.filter(tab => tab.id === state.chosenTab)[0]
-            if (index !== state.tabs.length - 1) {
-                tabs[index] = tabs[index + 1]
-                tabs[index + 1] = tmpTab
+            let newState = Object.assign({}, state)
+            let index = newState.tabs.findIndex(tab => tab.id === newState.chosenTab)
+            let tmpTab = newState.tabs.filter(tab => tab.id === newState.chosenTab)[0]
+            if (index !== newState.tabs.length - 1) {
+                newState.tabs[index] = newState.tabs[index + 1]
+                newState.tabs[index + 1] = tmpTab
             }
-            return { ...state, tabs }
+            return newState
         }
-        case 'EDITABLE':
-            let chosenTab = state.chosenTab
-            if (chosenTab !== 'profile1' && chosenTab !== 'profile2' && chosenTab !== 'profile3' && chosenTab !== 'profile4') {
-                document.getElementById('profileEdit').classList.add('show');
-                document.getElementById('profileDelete').classList.add('show');
-            } else {
-                document.getElementById('profileEdit').classList.remove('show');
-                document.getElementById('profileDelete').classList.remove('show');
-            }
-            return state
         case 'DELETE': {
-            let index = state.tabs.findIndex(tab => tab.id == state.chosenTab)
+            let newState = Object.assign({}, state)
+            let index = newState.tabs.findIndex(tab => tab.id == state.chosenTab)
             let newId
-            if (index !== 0) newId = state.tabs[index - 1].id
-            else newId = state.tabs[1].id
-            let tabs = [...state.tabs].filter(tab => tab.id !== state.chosenTab)
-            return {
-                ...state,
-                tabs,
-                chosenTab: newId,
-                onDelete: !state.onDelete
+            if (index !== 0) {
+                newId = newState.tabs[index - 1].id
+                newState.tabs[index - 1].active = true
             }
+            else {
+                newId = newState.tabs[1].id
+                newState.tabs[1].active = true
+            }
+            newState.tabs = newState.tabs.filter(tab => tab.id !== newState.chosenTab)
+
+            newState.chosenTab = newId
+            newState.onDelete = !newState.onDelete
+            return newState
         }
         case 'CONFDELETE': {
             return {
@@ -132,7 +114,7 @@ export default function (state = initialState, action) {
             }
         }
         case 'ON_EDIT': {
-            let text = state.tabs.find(tab => tab.id === state.chosenTab).name;
+            let text = state.tabs.filter(tab => tab.id === state.chosenTab)[0].name;
             return {
                 ...state,
                 isEdit: !state.isEdit,
@@ -141,24 +123,17 @@ export default function (state = initialState, action) {
             }
         }
         case 'FINISH_EDIT': {
-            let innerText = state.innerText;
-            let tabs = [...state.tabs]
-            let tab = state.tabs.find(tab => tab.id == state.chosenTab)
-            if (innerText.trim() !== '') tab.name = innerText
-            Object.assign({}, tabs, tab)
-            return {
-                ...state,
-                isEdit: false,
-                clicked: true
-            }
+            let newState = Object.assign({}, state)
+            let innerText = newState.innerText;
+            let [tab] = newState.tabs.filter(tab => tab.id == newState.chosenTab)
+            if (innerText && innerText.trim() !== '') tab.name = innerText
+            newState.isEdit = false;
+            return newState
         }
         case 'CHANGE': {
-            let innerText = action.e
-
-            console.log(innerText)
             return {
                 ...state,
-                innerText: innerText
+                innerText: action.e
             }
         }
         default:

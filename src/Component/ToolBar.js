@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { connect } from "react-redux";
-import { Add, Active, checkUpDown, Up, Down, canEdit, confDelete, onEdit } from './../Actions/index';
+import { Add, Active, Up, Down, confDelete, onEdit } from './../Actions/index';
 
 
 class Toolbar extends React.Component {
@@ -10,9 +10,6 @@ class Toolbar extends React.Component {
         this.state = {
             click: false
         }
-    }
-    componentDidUpdate() {
-        console.log(this.state.click, this.props.state.clicked)
     }
     async addTab() {
         let id = await new Date().getUTCMilliseconds()
@@ -25,21 +22,20 @@ class Toolbar extends React.Component {
         this.props.Add(newTab)
         this.props.Active(id)
         profileList.scrollTo(0, profileList.scrollHeight);
-        this.props.checkUpDown()
-        this.props.canEdit()
 
     }
     async onEdit(event) {
         await this.setState({
             click: !this.state.click
         })
-        console.log(this.state.click, !this.props.state.clicked)
-        if (this.state.click) this.props.onEdit(event)
+        if (this.state.click) await this.props.onEdit(event)
         document.getElementById('profileRename').focus();
         document.getElementById('profileRename').select();
     }
+
+
     render() {
-        const { Up, Down, confDelete, onEdit, state } = this.props
+        const { Up, Down, confDelete, state } = this.props
         return (
             <div className="toolbar flex">
                 <div className="icon add" id="profileAdd" onClick={this.addTab.bind(this)} ></div>
@@ -55,10 +51,8 @@ const mapDispatchToProps = dispatch => {
     return {
         Add: (tab) => dispatch(Add(tab)),
         Active: (id) => dispatch(Active(id)),
-        checkUpDown: () => dispatch(checkUpDown()),
         Up: () => dispatch(Up()),
         Down: () => dispatch(Down()),
-        canEdit: () => dispatch(canEdit()),
         confDelete: () => dispatch(confDelete()),
         onEdit: (e) => dispatch(onEdit(e)),
     }

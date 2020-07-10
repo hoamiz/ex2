@@ -7,11 +7,10 @@ import './assets/css/tooltip.css'
 import './assets/css/profile.css'
 import LeftSide from './Component/LeftSide';
 import RightSide from './Component/RightSide';
-import { connect } from 'react-redux';
 
 class App extends React.Component {
+
   render() {
-    console.log(this.props.state)
     return (
       <div classNameName="main-container">
         <div className="thx-wrapper flex">
@@ -22,7 +21,5 @@ class App extends React.Component {
     );
   }
 }
-const mapStateToProps = (state) => ({
-  state: state
-})
-export default connect(mapStateToProps, null)(App);
+
+export default App;

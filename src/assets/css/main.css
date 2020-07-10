@@ -52,7 +52,7 @@ div.flex > div {
     align-items: center;
 }
 .thx-wrapper {
-	width: 100%;
+	width: 1000px;
 	flex-direction: row;
 	min-height: 640px;
     max-height: 640px;
@@ -62,6 +62,7 @@ div.flex > div {
 	height: 688px;
 }
 .thx-window {
+    width: 50%;
     z-index: 98;
     background-color: #222;
 	padding: 20px 80px 20px 80px;
