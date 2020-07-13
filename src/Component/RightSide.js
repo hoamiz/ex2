@@ -16,9 +16,9 @@ class RightSide extends React.PureComponent {
     }
     render() {
         return (
-            <div class="thx-window">
-                <div class="sub-title flex">
-                    <h1 id="eqTitle" class="eq-title">{this.state.inner}</h1>
+            <div className="thx-window">
+                <div className="sub-title flex">
+                    <h1 id="eqTitle" className="eq-title">{this.state.inner}</h1>
                 </div>
             </div>
         )

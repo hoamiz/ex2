@@ -1,3 +1,8 @@
+const cloneState = state => {
+    let newState = { ...state }
+    newState.tabs = state.tabs.map(tab => Object.assign({}, tab))
+    return newState
+}
 
 const initialState = {
     chosenTab: "profile1",
@@ -47,24 +52,25 @@ const initialState = {
     isEdit: false,
     innerText: '',
     onDelete: false,
-}
+};
 export default function (state = initialState, action) {
     switch (action.type) {
         case 'ACTIVE': {
-            let newState = Object.assign({}, state);
-            newState.tabs.find(tab => tab.id === action.id).active = true
+            let newState = cloneState(state)
+            newState.tabs.find(tab => tab.id === action.id).active = true;
             newState.tabs.filter(tab => tab.id !== action.id).map(tab => tab.active = false)
-            newState.chosenTab = action.id
-            return newState
-        }
+            newState.chosenTab = action.id;
+            newState.innerText = newState.tabs.filter(tab => tab.id === newState.chosenTab)[0].name;
+            return newState;
+        };
         case 'ADD': {
             return {
                 ...state,
                 tabs: state.tabs.concat(action.tab),
-            }
+            };
         }
         case 'UP': {
-            let newState = Object.assign({}, state)
+            let newState = cloneState(state)
             let index = newState.tabs.findIndex(tab => tab.id === newState.chosenTab)
             let tmpTab = newState.tabs.filter(tab => tab.id === newState.chosenTab)[0]
             if (index !== 0) {
@@ -72,9 +78,9 @@ export default function (state = initialState, action) {
                 newState.tabs[index - 1] = tmpTab
             }
             return newState
-        }
+        };
         case 'DOWN': {
-            let newState = Object.assign({}, state)
+            let newState = cloneState(state)
             let index = newState.tabs.findIndex(tab => tab.id === newState.chosenTab)
             let tmpTab = newState.tabs.filter(tab => tab.id === newState.chosenTab)[0]
             if (index !== newState.tabs.length - 1) {
@@ -84,8 +90,8 @@ export default function (state = initialState, action) {
             return newState
         }
         case 'DELETE': {
-            let newState = Object.assign({}, state)
-            let index = newState.tabs.findIndex(tab => tab.id == state.chosenTab)
+            let newState = cloneState(state)
+            let index = newState.tabs.findIndex(tab => tab.id === state.chosenTab)
             let newId
             if (index !== 0) {
                 newId = newState.tabs[index - 1].id
@@ -114,23 +120,24 @@ export default function (state = initialState, action) {
             }
         }
         case 'ON_EDIT': {
-            let text = state.tabs.filter(tab => tab.id === state.chosenTab)[0].name;
-            return {
-                ...state,
-                isEdit: !state.isEdit,
-                innerText: text,
-                clicked: !state.clicked
-            }
+            let newState = cloneState(state)
+            let [tab] = newState.tabs.filter(tab => tab.id == newState.chosenTab)
+            if (newState.innerText && newState.innerText.trim() !== '') tab.name = newState.innerText
+            else newState.innerText = tab.name
+            newState.isEdit = !newState.isEdit;
+            return newState
+
         }
         case 'FINISH_EDIT': {
-            let newState = Object.assign({}, state)
+            let newState = cloneState(state)
             let innerText = newState.innerText;
-            let [tab] = newState.tabs.filter(tab => tab.id == newState.chosenTab)
+            let [tab] = newState.tabs.filter(tab => tab.id === newState.chosenTab)
             if (innerText && innerText.trim() !== '') tab.name = innerText
             newState.isEdit = false;
             return newState
         }
         case 'CHANGE': {
+
             return {
                 ...state,
                 innerText: action.e
@@ -140,3 +147,4 @@ export default function (state = initialState, action) {
             return state
     }
 }
+

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { connect } from "react-redux";
-import { Add, Active, Up, Down, confDelete, onEdit } from './../Actions/index';
+import { Add, Active, Up, Down, confDelete, onEdit, finishEdit } from './../Actions/index';
 
 
 class Toolbar extends React.Component {
@@ -24,13 +24,13 @@ class Toolbar extends React.Component {
         profileList.scrollTo(0, profileList.scrollHeight);
 
     }
-    async onEdit(event) {
-        await this.setState({
-            click: !this.state.click
-        })
-        if (this.state.click) await this.props.onEdit(event)
-        document.getElementById('profileRename').focus();
-        document.getElementById('profileRename').select();
+    onEdit() {
+        this.props.onEdit()
+        //
+        /*if (!this.state.click && !this.props.state.isEdit) this.props.onEdit(event)
+        this.setState(prevState => {
+            return { click: !prevState.click }
+        })*/
     }
 
 
@@ -54,7 +54,8 @@ const mapDispatchToProps = dispatch => {
         Up: () => dispatch(Up()),
         Down: () => dispatch(Down()),
         confDelete: () => dispatch(confDelete()),
-        onEdit: (e) => dispatch(onEdit(e)),
+        onEdit: () => dispatch(onEdit()),
+        finishEdit: () => dispatch(finishEdit()),
     }
 }
 const mapStateToProps = (state) => ({

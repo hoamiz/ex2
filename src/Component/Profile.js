@@ -1,24 +1,32 @@
 import React from 'react';
 import { connect } from "react-redux";
-import { Active, finishlEdit, onEdit, onChange } from './../Actions/index';
+import { Active, finishEdit, onEdit, onChange } from './../Actions/index';
 
 class Profile extends React.Component {
-
-
     componentDidMount() {
         this.props.Active('profile1')
+        document.addEventListener('click', this.onClickOutside)
+    }
+    componentWillUnmount() {
+        document.removeEventListener('click', this.onClickOutside)
+
     }
     componentDidUpdate() {
         this.checkUpDown()
         this.canEdit()
+
     }
     onClick(id) {
         this.props.Active(id)
     }
-    finishlEdit() {
-        this.props.finishlEdit()
+    onClickOutside = (e) => {
+        if (e.target.id === 'profileEdit' && document.getElementById('profileRename')) {
+            document.getElementById('profileRename').focus()
+            document.getElementById('profileRename').select()
+        }
+        if (e.target.id !== 'profileEdit' && this.props.state.isEdit) this.props.onEdit()
     }
-    onChange(e) {
+    onChange = (e) => {
         let evalue = e.target.value
         this.props.onChange(evalue)
     }
@@ -51,7 +59,7 @@ class Profile extends React.Component {
             <div id="profileList" className="scrollable" >
                 {state.tabs && state.tabs.map(tab => {
                     return (
-                        <div>
+                        <div key={tab.id}>
                             {state.isEdit && tab.id === state.chosenTab &&
                                 <div>
                                     <input
@@ -59,9 +67,10 @@ class Profile extends React.Component {
                                         id="profileRename"
                                         className="profile-item show"
                                         placeholder="Enter Profile Name"
-                                        maxlength="25"
-                                        onChange={this.onChange.bind(this)}
-                                        onBlur={this.finishlEdit.bind(this)}
+                                        maxLength="25"
+                                        onChange={this.onChange}
+                                        onBlur={this.finishEdit}
+
                                     />
                                 </div>
                             }
@@ -85,25 +94,16 @@ class Profile extends React.Component {
                     )
                 }
                 )}
-                <input
-                    id="profileRename"
-                    className="profile-item"
-                    placeholder="Enter Profile Name"
-                    maxlength="25"
-                />
             </div>
         )
     }
 }
-const mapDispatchToProps = dispatch => {
-
-    return {
-        Active: (id) => dispatch(Active(id)),
-        onEdit: () => dispatch(onEdit()),
-        finishlEdit: () => dispatch(finishlEdit()),
-        onChange: (e) => dispatch(onChange(e)),
-    }
-}
+const mapDispatchToProps = dispatch => ({
+    Active: (id) => dispatch(Active(id)),
+    onEdit: () => dispatch(onEdit()),
+    finishEdit: () => dispatch(finishEdit()),
+    onChange: (e) => dispatch(onChange(e)),
+})
 
 const mapStateToProps = (state) => ({
     state: state

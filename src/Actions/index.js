@@ -27,7 +27,7 @@ export const cancelDelete = () => ({
 export const onEdit = () => ({
     type: 'ON_EDIT'
 })
-export const finishlEdit = () => ({
+export const finishEdit = () => ({
     type: 'FINISH_EDIT'
 })
 export const onChange = (e) => ({

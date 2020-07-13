@@ -12,7 +12,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <div classNameName="main-container">
+      <div className="main-container">
         <div className="thx-wrapper flex">
           <LeftSide />
           <RightSide />
