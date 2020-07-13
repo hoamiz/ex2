@@ -26,9 +26,7 @@ class Profile extends React.Component {
         }
         if (e.target.id !== 'profileEdit' && this.props.state.isEdit) this.props.onEdit()
     }
-    finishEdit=()=>{
-        this.props.onEdit()
-    }
+
     onChange = (e) => {
         let evalue = e.target.value
         this.props.onChange(evalue)
@@ -72,8 +70,6 @@ class Profile extends React.Component {
                                         placeholder="Enter Profile Name"
                                         maxLength="25"
                                         onChange={this.onChange}
-                                        onBlur={this.finishEdit}
-
                                     />
                                 </div>
                             }
