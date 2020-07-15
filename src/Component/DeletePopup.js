@@ -1,7 +1,6 @@
 import React from 'react';
-import { Delete, Active, cancelDelete } from './../Actions/index';
+import { Delete, cancelDelete } from './../Actions/index';
 import { connect } from 'react-redux';
-import { store } from './../index';
 class DeletePopup extends React.Component {
     constructor(props) {
         super(props)

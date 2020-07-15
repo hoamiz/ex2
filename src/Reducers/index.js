@@ -121,7 +121,7 @@ export default function (state = initialState, action) {
         }
         case 'ON_EDIT': {
             let newState = cloneState(state)
-            let [tab] = newState.tabs.filter(tab => tab.id == newState.chosenTab)
+            let [tab] = newState.tabs.filter(tab => tab.id === newState.chosenTab)
             if (newState.innerText && newState.innerText.trim() !== '') tab.name = newState.innerText
             else newState.innerText = tab.name
             newState.isEdit = !newState.isEdit;
