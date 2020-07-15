@@ -26,20 +26,15 @@ class Toolbar extends React.Component {
     }
     onEdit() {
         this.props.onEdit()
-        //
-        /*if (!this.state.click && !this.props.state.isEdit) this.props.onEdit(event)
-        this.setState(prevState => {
-            return { click: !prevState.click }
-        })*/
     }
 
 
     render() {
-        const { Up, Down, confDelete, state } = this.props
+        const { Up, Down, confDelete, onEdit } = this.props
         return (
             <div className="toolbar flex">
                 <div className="icon add" id="profileAdd" onClick={this.addTab.bind(this)} ></div>
-                <div className="icon edit " id="profileEdit" onClick={this.onEdit.bind(this)}></div>
+                <div className="icon edit " id="profileEdit" onClick={onEdit}></div>
                 <div className="icon delete" id="profileDelete" onClick={confDelete}></div>
                 <div className="icon down" id="profileDown" onClick={Down}></div>
                 <div className="icon up disabled" id="profileUp" onClick={Up}></div>
